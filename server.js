@@ -53,24 +53,47 @@ const mainMenu = () => {
         } else if (response.choices === "View Roles") {
             viewRoles(); 
         } else {
-            return;
+            db.end();
         }
 })
 };
 
-db.query('SELECT * FROM department', function (err, results) {
-    console.log(results);
-  });
+// var being called in inquirer prompt to show tables
+const viewDepartments = () => {
+    db.query(`SELECT * FROM department`, function (err, results) {
+        // console.log(results);
+        console.table(results);
+        mainMenu();
+      });
+}
 
-  app.get('/db', (req,res) => {
-      let sql = 'CREATE DATABASE tracker_db';
-      db.query(sql, (err, result) => {
-          if(err) throw err;
-          console.log(result);
-          res.send('created database');
-      })
-  }
-  )
+const viewRoles = () => {
+    db.query(`SELECT * FROM role_`, function (err, results) {
+        // console.log(results);
+        console.table(results);
+        mainMenu();
+      });
+}
+
+const viewEmployees = () => {
+    db.query(`SELECT * FROM employess`, function (err, results) {
+        // console.log(results);
+        console.table(results);
+        mainMenu();
+      });
+}
+
+
+
+//   app.get('/db', (req,res) => {
+//       let sql = 'CREATE DATABASE tracker_db';
+//       db.query(sql, (err, result) => {
+//           if(err) throw err;
+//           console.log(result);
+//           res.send('created database');
+//       })
+//   }
+//   )
   
   // Default response for any other request (Not Found)
   app.use((req, res) => {
