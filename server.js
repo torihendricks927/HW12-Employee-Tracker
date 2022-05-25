@@ -1,6 +1,7 @@
  const express = require('express');
 const inquirer = require('inquirer');
 const mysql = require('mysql2');
+const table = require('console.table');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -31,6 +32,31 @@ db.connect((err) => {
    }
     console.log(connected);
 });
+// Beginning prompt to show main menu
+const mainMenu = () => {
+    inquirer.prompt([{
+        name: "Main Menu",
+        type: "list",
+        message: "Welcome to the Employee Tracker, please select from the following options:",
+        choices: [
+            "View Departments",
+            "View Employees",
+            "View Roles",
+            "Exit",
+        ]
+    },
+]).then((response) => {
+        if (response.choices === "View Departments") {
+            viewDepartments();
+        } else if (response.choices === "View Employees") {
+            viewEmployees();
+        } else if (response.choices === "View Roles") {
+            viewRoles(); 
+        } else {
+            return;
+        }
+})
+};
 
 db.query('SELECT * FROM department', function (err, results) {
     console.log(results);
@@ -55,6 +81,6 @@ db.query('SELECT * FROM department', function (err, results) {
     console.log(`Server running on port ${PORT}`);
   });
 
-
+mainMenu();
 
   
