@@ -1,21 +1,21 @@
- const express = require('express');
+//  const express = require('express');
 const inquirer = require('inquirer');
 const mysql = require('mysql2');
 const table = require('console.table');
 
-const app = express();
-const PORT = process.env.PORT || 3001;
+// const app = express();
+// const PORT = process.env.PORT || 3001;
 
 
 // Express middleware
-app.use(express.urlencoded({ extended: false }));
-app.use(express.json());
+// app.use(express.urlencoded({ extended: false }));
+// app.use(express.json());
 
 // Connect to database
 const db = mysql.createConnection(
   {
     host: 'localhost',
-    port: 3001,
+    // port: 3001,
     // MySQL username,
     user: 'root',
     // MySQL password
@@ -30,12 +30,12 @@ db.connect((err) => {
     if(err){
         throw err;
    }
-    console.log(connected);
+    console.log("connected");
 });
 // Beginning prompt to show main menu
 const mainMenu = () => {
     inquirer.prompt([{
-        name: "Main Menu",
+        name: "menu",
         type: "list",
         message: "Welcome to the Employee Tracker, please select from the following options:",
         choices: [
@@ -46,14 +46,16 @@ const mainMenu = () => {
         ]
     },
 ]).then((response) => {
-        if (response.choices === "View Departments") {
+    console.log(response)
+        if (response.menu === "View Departments") {
             viewDepartments();
-        } else if (response.choices === "View Employees") {
+        } else if (response.menu === "View Employees") {
             viewEmployees();
-        } else if (response.choices === "View Roles") {
+        } else if (response.menu === "View Roles") {
             viewRoles(); 
         } else {
-            db.end();
+            // db.end();
+            console.log("Thank you for choosing our service");
         }
 })
 };
@@ -61,14 +63,14 @@ const mainMenu = () => {
 // var being called in inquirer prompt to show tables
 const viewDepartments = () => {
     db.query(`SELECT * FROM department`, function (err, results) {
-        // console.log(results);
+         console.log(err);
         console.table(results);
         mainMenu();
       });
 }
 
 const viewRoles = () => {
-    db.query(`SELECT * FROM role_`, function (err, results) {
+    db.query(`SELECT * FROM roles`, function (err, results) {
         // console.log(results);
         console.table(results);
         mainMenu();
@@ -76,7 +78,7 @@ const viewRoles = () => {
 }
 
 const viewEmployees = () => {
-    db.query(`SELECT * FROM employess`, function (err, results) {
+    db.query(`SELECT * FROM employees`, function (err, results) {
         // console.log(results);
         console.table(results);
         mainMenu();
@@ -96,14 +98,16 @@ const viewEmployees = () => {
 //   )
   
   // Default response for any other request (Not Found)
-  app.use((req, res) => {
-    res.status(404).end();
-  });
+//   app.use((req, res) => {
+//     res.status(404).end();
+//   });
   
-  app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-  });
+//   app.listen(PORT, () => {
+//     console.log(`Server running on port ${PORT}`);
+//   });
 
 mainMenu();
+
+module.exports = db;
 
   

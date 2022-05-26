@@ -1,13 +1,14 @@
-INSERT INTO department (id, department_name)
-VALUES (001, "Georgia Retina");
+INSERT INTO department (department_name)
+VALUES ('Georgia Retina'),
+    ('Gainesville Eye Associates');
        
-INSERT INTO role_ (id, title, salary, department_id)
-VALUES (10, "Technician", 50000, 001),
-       (20, "Physician", 100000, 001),
-       (30, "Manager", 80000, 001);
+INSERT INTO roles (title, salary, department_id)
+VALUES ('Technician', 50000, 1),
+       ('Physician', 100000, 2),
+       ('Manager', 80000, 1);
        
-INSERT INTO employee (id, first_name, last_name, role_id, manager_id)
-VALUES (1, "Johnny", "Depp", 10, NULL),
-       (2, "Amber", "Heard", 20, NULL),
-       (3, "Jason", "Momoa", 30, 123);
+INSERT INTO employees (first_name, last_name, role_id, manager_id)
+VALUES ("Johnny", "Depp", 1, 1),
+       ("Amber", "Heard", 2, 1),
+       ("Jason", "Momoa", 3, 1);
        
