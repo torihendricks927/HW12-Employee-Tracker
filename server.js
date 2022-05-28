@@ -42,17 +42,30 @@ const mainMenu = () => {
             "View Departments",
             "View Employees",
             "View Roles",
+            "Add an employee",,
+            "Add a role",
+            "Add a department",
+            "Update an employee role",
             "Exit",
         ]
     },
 ]).then((response) => {
     console.log(response)
+    // switched response connection to name "menu" instead of choices
         if (response.menu === "View Departments") {
             viewDepartments();
         } else if (response.menu === "View Employees") {
             viewEmployees();
         } else if (response.menu === "View Roles") {
             viewRoles(); 
+        } else if (response.menu === "Add an employee") {
+            addNewEmployee(); 
+        } else if (response.menu === "Add a role") {
+            addNewRole(); 
+        } else if (response.menu === "Add a department") {
+            addNewDepartment(); 
+        } else if (response.menu === "Update an employee role") {
+            employeeRoleUpdate(); 
         } else {
             // db.end();
             console.log("Thank you for choosing our service");
@@ -60,7 +73,7 @@ const mainMenu = () => {
 })
 };
 
-// var being called in inquirer prompt to show tables
+// var to show current information in sql tables
 const viewDepartments = () => {
     db.query(`SELECT * FROM department`, function (err, results) {
          console.log(err);
@@ -84,27 +97,44 @@ const viewEmployees = () => {
         mainMenu();
       });
 }
-
-
-
-//   app.get('/db', (req,res) => {
-//       let sql = 'CREATE DATABASE tracker_db';
-//       db.query(sql, (err, result) => {
-//           if(err) throw err;
-//           console.log(result);
-//           res.send('created database');
-//       })
-//   }
-//   )
-  
-  // Default response for any other request (Not Found)
-//   app.use((req, res) => {
-//     res.status(404).end();
-//   });
-  
-//   app.listen(PORT, () => {
-//     console.log(`Server running on port ${PORT}`);
-//   });
+// add employee to table
+const addNewEmployee = () => {
+    inquirer.prompt([{
+        type: "input",
+        message: "What is the employee's first name?",
+        name: "first_name",
+    },
+    {
+        type: "input",
+        message: "What is the employee's last name?",
+        name: "last_name",
+    },
+    {
+        type: "input",
+        message: "What is the employee's role ID?",
+        name: "role_id",
+    },
+    {
+        type: "input",
+        message: "Is the new employee a manager? If so, enter manager ID. Otherwise, enter 0",
+        // validate: (response) => {
+        //     if(response === "Yes") {
+        //         return true
+        //     } else return false
+        // },
+        name: "manager_id", 
+    },
+]).then((response) => {
+    db.query('INSERT INTO employees SET ?', {
+        first_name: response.first_name,
+        last_name: response.last_name,
+        role_id: response.role_id,
+        manager_id: response.manager_id,
+    })
+    viewEmployees()
+    // mainMenu()
+})
+}
 
 mainMenu();
 
