@@ -132,7 +132,47 @@ const addNewEmployee = () => {
         manager_id: response.manager_id,
     })
     viewEmployees()
-    // mainMenu()
+})
+}
+// add a new role
+const addNewRole = () => {
+    inquirer.prompt([{
+        type: "input",
+        message: "What is the name of the new role? ",
+        name: "title",
+    },
+    {
+        type: "input",
+        message: "What is the salary for the new role? ",
+        name: "salary",
+    },
+    {
+        type: "input",
+        message: "What is the department ID for the new role? ",
+        name: "department_id",
+    },
+]).then((response) => {
+    db.query('INSERT INTO roles set ?', {
+        title: response.title,
+        salary: response.salary,
+        department_id: response.department_id,
+    })
+    viewRoles()
+})
+}
+
+// adding new department
+const addNewDepartment = () => {
+    inquirer.prompt([{
+        type: "input",
+        message: "What is the name of the new department? ",
+        name: "department_name",
+    },
+]).then((response) => {
+    db.query('INSERT INTO department set ?', {
+        department_name: response.department_name,
+    })
+    viewDepartments()
 })
 }
 
@@ -140,4 +180,4 @@ mainMenu();
 
 module.exports = db;
 
-  
+
