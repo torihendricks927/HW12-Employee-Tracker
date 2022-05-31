@@ -150,6 +150,7 @@ const addNewEmployee = () => {
       viewEmployees();
     });
 };
+
 // add a new role
 const addNewRole = () => {
   inquirer
@@ -180,6 +181,7 @@ const addNewRole = () => {
     });
 };
 
+
 // adding new department
 const addNewDepartment = () => {
   inquirer
@@ -197,6 +199,54 @@ const addNewDepartment = () => {
       viewDepartments();
     });
 };
+
+
+// update an employee
+const employeeRoleUpdate = () => {
+   
+    db.query("SELECT * FROM EMPLOYEE", (req, res) => {
+        var employeeOptions = [];
+        res.map(({ first_name, last_name, id}) => {
+            employeeOptions.push({
+                name: first_name + " " + last_name,
+                value: id
+            });
+        });
+
+    db.query("SELECT * FROM ROLE", (req,res) => {
+        var roleOptions = [];
+        res.map(({ title, id}) => {
+            roleOptions.push({
+                name: title,
+                value: id
+            });
+        });
+
+    inquirer.prompt([
+            {
+                type: "list",
+                name: "employee",
+                message: "Which employee do you want to update?",
+                choices: employeeOptions,
+            },
+            {
+                type: "list",
+                name: "role",
+                message: "What is the new role?",
+                choices: roleOptions,
+            }
+    ])
+    .then((response) => {
+        db.query(" UPDATE EMPLOYEE SET ? WHERE ?? = ?;", {
+            role_id: res.role
+        })
+
+        console.log("Role has been changed");
+        viewEmployees();
+    });
+    })
+    })
+}
 
 mainMenu();
 
