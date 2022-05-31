@@ -170,12 +170,14 @@ const addNewRole = () => {
         message: "What is the department ID for the new role? ",
         name: "department_id",
       },
+
     ])
     .then((response) => {
       db.query("INSERT INTO roles set ?", {
         title: response.title,
         salary: response.salary,
-        department_id: response.department_id,
+        department_id: response.department_id
+       
       });
       viewRoles();
     });
@@ -203,50 +205,56 @@ const addNewDepartment = () => {
 
 // update an employee
 const employeeRoleUpdate = () => {
-   
-    db.query("SELECT * FROM EMPLOYEE", (req, res) => {
-        var employeeOptions = [];
-        res.map(({ first_name, last_name, id}) => {
-            employeeOptions.push({
-                name: first_name + " " + last_name,
-                value: id
-            });
-        });
-
-    db.query("SELECT * FROM ROLE", (req,res) => {
-        var roleOptions = [];
-        res.map(({ title, id}) => {
-            roleOptions.push({
-                name: title,
-                value: id
-            });
-        });
+//    var employeeOptions = viewEmployees;
+//    var roleOptions = viewRoles;
 
     inquirer.prompt([
-            {
-                type: "list",
-                name: "employee",
-                message: "Which employee do you want to update?",
-                choices: employeeOptions,
-            },
-            {
-                type: "list",
-                name: "role",
-                message: "What is the new role?",
-                choices: roleOptions,
-            }
-    ])
-    .then((response) => {
-        db.query(" UPDATE EMPLOYEE SET ? WHERE ?? = ?;", {
-            role_id: res.role
-        })
+        {
+            type: "list",
+            name: "employee",
+            message: "Which employee do you want to update?",
+            choices: viewEmployees(),
+        },
+        {
+            type: "list",
+            name: "role",
+            message: "What is the new role?",
+            choices: viewRoles(),
+        }
+])
+.then((response) => {
+    // db.query("SELECT * FROM EMPLOYEE", (response) => {
+    //     var employeeOptions = [];
+    //     response.forEach(({ first_name, last_name, id}) => {
+    //         employeeOptions.push({
+    //             name: first_name + " " + last_name,
+    //             value: id
+    //         });
+    //     });
 
-        console.log("Role has been changed");
-        viewEmployees();
+    // db.query("SELECT * FROM ROLE", (response) => {
+    //     var roleOptions = [];
+    //     response.forEach(({ title, id}) => {
+    //         roleOptions.push({
+    //             name: title,
+    //             value: id
+    //         });
+    //     });
+
+   
+    db.query(" UPDATE EMPLOYEE SET role_id = ? WHERE id = ?;", {
+        role_id: res.role,
+        employees : res.employee,
+    })
+
+    console.log("Role has been changed");
+    viewEmployees();
+
+   
     });
-    })
-    })
-}
+//     })
+//     })
+ }
 
 mainMenu();
 
