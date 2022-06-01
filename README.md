@@ -18,6 +18,8 @@ This program is provided to keep information on departments, roles, and employee
 
 ## Link to walkthrough video
 
+https://drive.google.com/file/d/17PTjf0k4G75M4iERe8nGGHOw0wqeJ4T4/view
+
 ## Installation
 It may be installed through forking github repo and then installing npm -i followed by npm start..
 
