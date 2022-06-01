@@ -45,7 +45,6 @@ const mainMenu = () => {
           "View Employees",
           "View Roles",
           "Add an employee",
-          ,
           "Add a role",
           "Add a department",
           "Update an employee role",
@@ -203,57 +202,65 @@ const addNewDepartment = () => {
 };
 
 
+
+
 // update an employee
 const employeeRoleUpdate = () => {
 //    var employeeOptions = viewEmployees;
 //    var roleOptions = viewRoles;
+db.query("SELECT * FROM EMPLOYEES", (err, res) => {
+    if (err) throw err;
+    var employeeOptions = [];
+    res.forEach(({ first_name, last_name, id}) => {
+        employeeOptions.push({
+            name: first_name + " " + last_name,
+            value: id
+        });
+    });
+
+db.query("SELECT * FROM ROLES", (err, res) => {
+    if (err) throw err;
+        var roleOptions = [];
+    res.forEach(({ title, id}) => {
+        roleOptions.push({
+            name: title,
+            value: id
+        });
+    });
+
 
     inquirer.prompt([
         {
             type: "list",
-            name: "employee",
+            name: "id",
             message: "Which employee do you want to update?",
-            choices: viewEmployees(),
+            choices: employeeOptions,
         },
         {
             type: "list",
             name: "role",
             message: "What is the new role?",
-            choices: viewRoles(),
+            choices: roleOptions,
         }
 ])
 .then((response) => {
-    // db.query("SELECT * FROM EMPLOYEE", (response) => {
-    //     var employeeOptions = [];
-    //     response.forEach(({ first_name, last_name, id}) => {
-    //         employeeOptions.push({
-    //             name: first_name + " " + last_name,
-    //             value: id
-    //         });
-    //     });
-
-    // db.query("SELECT * FROM ROLE", (response) => {
-    //     var roleOptions = [];
-    //     response.forEach(({ title, id}) => {
-    //         roleOptions.push({
-    //             name: title,
-    //             value: id
-    //         });
-    //     });
 
    
-    db.query(" UPDATE EMPLOYEE SET role_id = ? WHERE id = ?;", {
-        role_id: res.role,
-        employees : res.employee,
-    })
+    db.query(" UPDATE EMPLOYEES SET ? WHERE ?? = ?;", [{
+        role_id: response.role},
+        "id", response.id,
+    ], (err, res) => {
+        if (err) throw err;
+    }
+    )
 
     console.log("Role has been changed");
     viewEmployees();
 
    
     });
-//     })
-//     })
+    })
+    })
  }
 
 mainMenu();
